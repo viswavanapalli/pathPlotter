@@ -27,14 +27,11 @@ public class RESTClient {
     public String sendGet(String api) throws Exception {
         HttpGet request = new HttpGet(api);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
-            System.out.println(response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             Header headers = entity.getContentType();
-            System.out.println(headers);
             if (entity != null) {
                 // return it as a String
                 String result = EntityUtils.toString(entity);
-                System.out.println(result);
                 return result;
             }
             return "";
@@ -45,7 +42,6 @@ public class RESTClient {
         HttpPost post = new HttpPost(api);
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(post)) {
-            System.out.println(EntityUtils.toString(response.getEntity()));
         }
 
     }

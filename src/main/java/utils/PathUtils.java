@@ -29,6 +29,8 @@ package utils;
  * if this projects an angle 0 onto center,
  * length of arc = R0
  *
+ * Assume infinitesimal latitude and longitude grid as a rectangle
+ *
  */
 
 import com.google.maps.internal.PolylineEncoding;
@@ -41,6 +43,7 @@ import model.Point;
 import java.util.*;
 
 public class PathUtils {
+
     //FETCHES KEY VALUE PAIR MAP FROM Input string
     public static Map<Parameter, String> getParameterValues(String command) {
         Map<Parameter, String> parameterValues = new HashMap<Parameter, String>();
@@ -57,7 +60,7 @@ public class PathUtils {
         return parameterValues;
     }
 
-
+    // Input Parsing
     public static PathRequest getInputRequestFromParameters(Map<Parameter, String> parameterValues){
         PathRequest pathRequest = new PathRequest();
         Location startLocation = new Location();
@@ -85,7 +88,7 @@ public class PathUtils {
         return pathRequest;
     }
 
-
+    // Input parsing
     public static LatLng getLatLngFromParameters(Map<Parameter, String> parameterValues){
         LatLng latLng = new LatLng();
         Iterator<Map.Entry<Parameter,String>> mapIterator = parameterValues.entrySet().iterator();
@@ -114,23 +117,25 @@ public class PathUtils {
         Point point1 = getPointFromLatLng(latLng1);
         Point point2 = getPointFromLatLng(latLng2);
 
+        //approximated distacne assuming the grid is rectangle
         double distance2 =  Math.sqrt(
                 Math.pow(diffLatInRadians*PathPlotterConstants.radius, 2)
                         + Math.pow(diffLongInRadians*PathPlotterConstants.radius*Math.cos(latRadians), 2)
         );
 
+        //more accurate distance calculated from Coordinate geometry
         double displacement = findDisplacement(point1, point2);
         double angleAtCenter = 2* Math.asin(displacement/(2*PathPlotterConstants.radius));
+        //distance calculated from Math (coordinate and polar system)
         distance = angleAtCenter *PathPlotterConstants.radius;
-        System.out.println("******Distance between Points ****");
-        System.out.println(distance2 + " :- approx distance");
-        System.out.println(displacement + " :- xyz displacement");
-        System.out.println(distance + " :- xyz distance");
-
+//        System.out.println("******Distance between Points ****");
+//        System.out.println(distance2 + " :- approx distance");
+//        System.out.println(displacement + " :- xyz displacement");
+//        System.out.println(distance + " :- xyz distance");
         return distance;
-
     }
 
+    //Finding displacement between two (X,Y,Z) coordinate points
     public static double findDisplacement(Point point1, Point point2){
         return Math.sqrt(
                 Math.pow((point1.getX() - point2.getX()), 2)
@@ -139,6 +144,7 @@ public class PathUtils {
         );
     }
 
+    //Finding point at distance d, assuming the grid is a square grid
     public static LatLng findPointAtDistanceD(LatLng latLng1, LatLng latLng2, Double d){
         double distance = findDistanceBetweenTwoLatLngs(latLng1, latLng2);
         double diffLatInRadians = ((latLng2.lat - latLng1.lat)*Math.PI)/180;
@@ -161,14 +167,13 @@ public class PathUtils {
         double dLatDegrees = dLatRadians * 180/Math.PI;
         double dLongDegrees = dLongRadians * 180/Math.PI;
 
-
-
         LatLng latLng = new LatLng();
         latLng.lat = latLng1.lat + dLatDegrees;
         latLng.lng = latLng1.lng + dLongDegrees;
         return latLng;
     }
 
+    // GET (X,Y,Z) coordinates from latitude,longitude
     public static Point getPointFromLatLng(LatLng latLng){
         Double latInRadians = (latLng.lat*Math.PI)/180;
         Double longInRadians = (latLng.lng*Math.PI)/180;
@@ -176,10 +181,10 @@ public class PathUtils {
         point.setY(PathPlotterConstants.radius*Math.sin(latInRadians));
         point.setX(PathPlotterConstants.radius*Math.cos(latInRadians)*Math.sin(longInRadians));
         point.setZ(PathPlotterConstants.radius*Math.cos(latInRadians)*Math.cos(longInRadians));
-
         return point;
     }
 
+    // Decode points from polyline
     public static List<LatLng> getLocationsFromPolyline(String latLngs) {
         List<LatLng> listOfLatLngs = PolylineEncoding.decode(latLngs);
         return listOfLatLngs;

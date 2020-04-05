@@ -20,37 +20,29 @@ public class PathPlotterApplication {
     private static PathService pathService = new PathServiceImpl();
 
     private static PathController pathController = new PathController();
-//    A is 12.94523, 77.61896
-//    B is 12.95944, 77.66085
 
     public static void main(String[] args){
-        String inputString2 = "START_LATITUDE=12.94523 START_LONGITUDE=77.61896 DEST_LATITUDE=12.95944 DEST_LONGITUDE=77.66085";
-
-        execute(inputString2);
-
-
-        //testing output distance of sample output.. if consistent or not
-        testExecute();
-
-
-
+        String inputString = "START_LATITUDE=12.94523 START_LONGITUDE=77.61896 DEST_LATITUDE=12.95944 DEST_LONGITUDE=77.66085";
+        execute(inputString);
+        testDistance();
+        commandLineInputs();
     }
 
     public static void execute(String inputString){
         try{
             if(inputString != null && inputString.trim()!=""){
+                System.out.println("For Query " + inputString);
                 Map<Parameter, String> parameterValues = PathUtils.getParameterValues(inputString);
                 PathRequest pathRequest = PathUtils.getInputRequestFromParameters(parameterValues);
-
-                pathController.findPath(pathRequest);
-
+                //To verify distances
+                List<LatLng> evenSpacedLatLngs = pathController.findPath(pathRequest);
+                pathController.findDistance(evenSpacedLatLngs);
             }
         } catch(Exception e){
             System.out.println("Error executing query " + inputString);
             e.printStackTrace();
         }
     }
-
 
     public static void commandLineInputs(){
         Scanner scanner = new Scanner(System.in);
@@ -66,8 +58,8 @@ public class PathPlotterApplication {
     }
 
 
-//Checking if the outputs we
-    public static void testExecute(){
+    //Checking if the outputs distances are at par with base Distance
+    public static void testDistance(){
         try {
 
             List<LatLng> latLngs = new ArrayList<LatLng>();
@@ -77,18 +69,7 @@ public class PathPlotterApplication {
                     latLngs.add(PathUtils.getLatLngFromParameters(parameterValues));
                 }
             }
-            LatLng prevLatLng = latLngs.get(0);
-            LatLng nextLatLng;
-
-            Iterator<LatLng> latLngIterator = latLngs.iterator();
-            while(latLngIterator.hasNext()){
-                nextLatLng = latLngIterator.next();
-                System.out.println("===========================================================");
-                System.out.println("PrevPoint: " + prevLatLng.toString());
-                System.out.println("NextPoint: " + nextLatLng.toString());
-                PathUtils.findDistanceBetweenTwoLatLngs(prevLatLng, nextLatLng);
-                prevLatLng = nextLatLng;
-            }
+            pathController.findDistance(latLngs);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -12,4 +12,6 @@ public interface PathService {
 
     public List<LatLng> getEvenSpacedListOfLatLng(List<LatLng> inputPoints, double baseDistance);
 
+    public void findDistanceBetweenConsecutiveLatlng(List<LatLng> latLngs);
+
 }

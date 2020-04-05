@@ -48,7 +48,6 @@ public class PathServiceImpl implements PathService {
         }
 
         List<LatLng> evenSpacedPoints = getEvenSpacedListOfLatLng(latLngsInPolyline, 50);
-        System.out.println(evenSpacedPoints);
         return evenSpacedPoints;
     }
 
@@ -64,10 +63,9 @@ public class PathServiceImpl implements PathService {
         while(inputPointsItr.hasNext()){
             LatLng nextPoint = inputPointsItr.next();
 
-            System.out.println("===========================================================");
-            System.out.println("PrevPoint: " + prevPoint.toString());
-            System.out.println("NextPoint: " + nextPoint.toString());
-
+//            System.out.println("===========================================================");
+//            System.out.println("PrevPoint: " + prevPoint.toString());
+//            System.out.println("NextPoint: " + nextPoint.toString());
 
             double currentDistance = PathUtils.findDistanceBetweenTwoLatLngs(prevPoint, nextPoint);
             if(currentDistance == 0){
@@ -95,10 +93,26 @@ public class PathServiceImpl implements PathService {
                 evenSpacedPoints.add(nextPoint);
                 prevPoint = nextPoint;
             }
-            System.out.println("Offset = "+ offset);
+//            System.out.println("Offset = "+ offset);
         }
         evenSpacedPoints.add(inputPoints.get(inputPoints.size()-1));
         return evenSpacedPoints;
+    }
+
+    @Override
+    public void findDistanceBetweenConsecutiveLatlng(List<LatLng> latLngs) {
+        LatLng prevLatLng = latLngs.get(0);
+        LatLng nextLatLng;
+
+        Iterator<LatLng> latLngIterator = latLngs.iterator();
+        while(latLngIterator.hasNext()){
+            nextLatLng = latLngIterator.next();
+//                System.out.println("===========================================================");
+//                System.out.println("PrevPoint: " + prevLatLng.toString());
+//                System.out.println("NextPoint: " + nextLatLng.toString());
+            PathUtils.findDistanceBetweenTwoLatLngs(prevLatLng, nextLatLng);
+            prevLatLng = nextLatLng;
+        }
     }
 
 

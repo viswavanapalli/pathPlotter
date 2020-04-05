@@ -1,7 +1,6 @@
 package model;
 
 import constants.PathPlotterConstants;
-import enums.Mode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

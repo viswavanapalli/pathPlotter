@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * Point in (x,y,z) coordinates
+ *
+ */
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
