@@ -25,13 +25,14 @@
   Sample Queries are execute
   It will be followed by a Command Line prompt which feeds in INPUT_QUERIES and execute them. 
   Until "exit" is entered.
-  
+  ```
 ### References
+  ```
   https://developers.google.com/maps/documentation/directions/client-library
   https://mkyong.com/java/how-to-send-http-request-getpost-in-java/
-
+  ```
 ### Math for understanding
-
+  ```
  -> TO Find Radians From latitude and longitude
     latitude  in radians :- latitudeInDegrees * pi / 180
     longitude in radians :- longitudeInDegrees* pi / 180
@@ -56,3 +57,4 @@
     length of arc = R*0
 
  -> Approximate infinitesimal latitude and longitude grid as a rectangle while incrementing
+  ```
